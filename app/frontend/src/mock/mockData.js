@@ -3,7 +3,7 @@ export const personalInfo = {
   title: "Frontend Developer",
   tagline: "Membangun pengalaman web yang indah dan interaktif",
   bio: "Saya adalah seorang Frontend Developer yang passionate dalam menciptakan user interface yang intuitif dan menarik. Dengan pengalaman dalam React, Next.js, dan modern web technologies, saya fokus untuk menghadirkan solusi web yang responsif dan user-friendly.",
-  email: "alfinzaki@gmail.com",
+  email: "alfinzaki26@gmail.com",
   location: "Indonesia",
   // `photo` is the recommended place for your actual portrait (local file under /public/images/profile.svg)
   // Set this to a local path (e.g. "/images/profile.svg") or a remote URL (add domain to next.config.js).

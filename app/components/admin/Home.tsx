@@ -27,9 +27,9 @@ const Home: React.FC<HomeProps> = ({ displayText, scrollToSection }) => {
         <h2 className="text-3xl md:text-5xl font-bold text-gray-400 mb-6">
           {personalInfo.title}
         </h2>
-        <p className="text-gradient-primary mb-8 h-8 font-mono text-xl md:text-2xl">
-          {displayText}
-          <span className="animate-pulse">|</span>
+        <p className="text-gradient-primary mb-8 h-8 font-mono text-xl md:text-2xl min-h-[2rem] flex items-center justify-center">
+          {displayText || " "}
+          <span className="animate-pulse ml-1">|</span>
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <Button

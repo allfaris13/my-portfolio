@@ -57,13 +57,14 @@ const Portfolio = () => {
 
   // Typewriter effect
   useEffect(() => {
-    if (isTyping && displayText.length < fullText.length) {
+    // Hanya mulai typewriter setelah loading selesai
+    if (!isLoading && isTyping && displayText.length < fullText.length) {
       const timeout = setTimeout(() => {
         setDisplayText(fullText.slice(0, displayText.length + 1));
       }, 100);
       return () => clearTimeout(timeout);
     }
-  }, [displayText, isTyping, fullText]);
+  }, [displayText, isTyping, fullText, isLoading]); // Tambahkan isLoading dependency
 
   // Skills animation effect
   useEffect(() => {
@@ -221,6 +222,10 @@ const Portfolio = () => {
   // Handle loading completion
   const handleLoadingComplete = () => {
     setIsLoading(false);
+    // Reset displayText dan mulai typewriter setelah delay kecil
+    setTimeout(() => {
+      setDisplayText("");
+    }, 200);
   };
 
   // Show loading screen

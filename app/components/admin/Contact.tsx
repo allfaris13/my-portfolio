@@ -61,7 +61,7 @@ const Contact: React.FC<ContactProps> = ({ formData, setFormData, handleSubmit }
                     </div>
                     <div>
                       <p className="text-gray-400 text-sm font-medium">TELEPON</p>
-                      <p className="text-white font-semibold">+62 812 4911 926</p>
+                      <p className="text-white font-semibold">+62 895 325 797 281</p>
                     </div>
                   </div>
                   
