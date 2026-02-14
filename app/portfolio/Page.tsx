@@ -234,7 +234,7 @@ const Portfolio = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-dark-purple text-gray-100">
+    <div className="min-h-screen bg-gradient-dark-purple text-gray-100 overflow-x-hidden">
       {/* Navigation - Floating Style */}
       <nav className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ${
         isNavbarVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
