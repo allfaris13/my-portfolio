@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import emailjs from '@emailjs/browser';
 
 // Import komponen admin yang sudah dipisah
 import Home from "../components/admin/Home";
@@ -11,7 +10,6 @@ import Projects from "../components/admin/Projects";
 import Experience from "../components/admin/Experience";
 import Blog from "../components/admin/Blog";
 import Contact from "../components/admin/Contact";
-import LoadingScreen from "../components/LoadingScreen";
 
 import { toast } from "@/hooks/use-toast";
 import { personalInfo, skills } from "../frontend/src/mock/mockData";
@@ -19,9 +17,6 @@ import { personalInfo, skills } from "../frontend/src/mock/mockData";
 const Portfolio = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>("home");
-  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,26 +30,6 @@ const Portfolio = () => {
   const isTyping = true;
   const fullText = personalInfo.tagline;
 
-  // Navbar scroll detection
-  useEffect(() => {
-    const controlNavbar = () => {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down & past 100px
-        setIsNavbarVisible(false);
-      } else {
-        // Scrolling up or at top
-        setIsNavbarVisible(true);
-      }
-      
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', controlNavbar);
-    return () => window.removeEventListener('scroll', controlNavbar);
-  }, [lastScrollY]);
-
   // Typewriter effect
   useEffect(() => {
     if (isTyping && displayText.length < fullText.length) {
@@ -67,13 +42,7 @@ const Portfolio = () => {
 
   // Skills animation effect
   useEffect(() => {
-    if (skillsInView && !isLoading) {
-      console.log('Starting skills animation');
-      
-      // Reset animated skills first
-      setAnimatedSkills({});
-      setSkillsCompleted({});
-      
+    if (skillsInView) {
       skills.forEach((skill, index) => {
         const animationDelay = index * 150; // Stagger animation
         setTimeout(() => {
@@ -83,6 +52,9 @@ const Portfolio = () => {
           let currentValue = 0;
           
           const timer = setInterval(() => {
+            // Easing function for smooth animation
+            const progress = currentValue / skill.level;
+            const easedProgress = 1 - Math.pow(1 - progress, 3); // Cubic ease-out
             currentValue += increment;
             
             if (currentValue >= skill.level) {
@@ -105,18 +77,14 @@ const Portfolio = () => {
         }, animationDelay);
       });
     }
-  }, [skillsInView, isLoading]); // Tambahkan isLoading sebagai dependency
+  }, [skillsInView]);
 
   // Intersection Observer for skills section
   useEffect(() => {
-    // Hanya jalankan observer setelah loading selesai
-    if (isLoading) return;
-    
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.target.id === 'skills') {
-            console.log('Skills section in view, starting animation');
             setSkillsInView(true);
           }
         });
@@ -130,7 +98,7 @@ const Portfolio = () => {
     }
 
     return () => observer.disconnect();
-  }, [isLoading]); // Tambahkan isLoading sebagai dependency
+  }, []);
 
   // Love hearts effect
   const createLoveHearts = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -162,51 +130,14 @@ const Portfolio = () => {
     }
   };
 
-  // Handle form submit with EmailJS
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // Handle form submit
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Validasi form data
-    if (!formData.name || !formData.email || !formData.message) {
-      toast({
-        title: "Form Tidak Lengkap",
-        description: "Mohon isi semua field yang diperlukan.",
-      });
-      return;
-    }
-    
-    try {
-      // Initialize EmailJS dengan public key
-      emailjs.init('KWBZ3QluYH1xgqnFN');
-      
-      const result = await emailjs.send(
-        'service_441887q',     // Service ID
-        'template_8oa6jwt',    // Template ID yang benar
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          to_name: 'Alfian Jack',
-          reply_to: formData.email,
-        }
-      );
-      
-      console.log('Email berhasil dikirim:', result);
-      toast({
-        title: "Email Berhasil Dikirim!",
-        description: "Terima kasih, saya akan segera membalas email Anda.",
-      });
-      
-      setFormData({ name: "", email: "", message: "" });
-      
-    } catch (error: any) {
-      console.error('EmailJS Error:', error);
-      
-      toast({
-        title: "Gagal Mengirim Email",
-        description: "Terjadi kesalahan. Silakan coba lagi atau hubungi langsung via email.",
-      });
-    }
+    toast({
+      title: "Pesan Terkirim!",
+      description: "Terima kasih, saya akan segera menghubungi Anda.",
+    });
+    setFormData({ name: "", email: "", message: "" });
   };
 
   const navLinks = [
@@ -216,38 +147,26 @@ const Portfolio = () => {
     { id: "projects", label: "Projects" },
     { id: "experience", label: "Experience" },
     { id: "blog", label: "Blog" },
+    { id: "contact", label: "Contact" },
   ];
-
-  // Handle loading completion
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-  };
-
-  // Show loading screen
-  if (isLoading) {
-    return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
-  }
 
   return (
     <div className="min-h-screen bg-gradient-dark-purple text-gray-100">
-      {/* Navigation - Floating Style */}
-      <nav className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 ${
-        isNavbarVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
-      }`}>
-        <div className="bg-gray-900/90 backdrop-blur-md border border-purple-500/20 rounded-full px-8 py-4 shadow-2xl">
-          <div className="flex items-center justify-between gap-8">
-            {/* Logo */}
-            <div className="text-lg font-bold text-gradient-primary whitespace-nowrap">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-black/90 backdrop-blur-sm z-50 border-b border-purple-800/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="text-xl font-bold text-gradient-primary">
               &lt;Dev Area /&gt;
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex space-x-8">
               {navLinks.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => scrollToSection(link.id)}
-                  className={`text-sm text-gray-300 hover:text-purple-400 transition-colors duration-300 whitespace-nowrap ${
+                  className={`text-gray-300 hover:text-purple-400 transition-colors duration-300 ${
                     activeSection === link.id ? "text-purple-400" : ""
                   }`}
                 >
@@ -255,53 +174,31 @@ const Portfolio = () => {
                 </button>
               ))}
             </div>
-
-            {/* CTA Button */}
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="hidden md:flex items-center gap-2 bg-gradient-primary text-white px-6 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-all duration-300 whitespace-nowrap"
-            >
-              <span>Contact Me</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
 
             {/* Mobile Menu Button */}
             <button
               className="md:hidden text-gray-300 hover:text-purple-400"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 bg-gray-900/95 backdrop-blur-md border border-purple-500/20 rounded-2xl p-6 shadow-2xl">
-            <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => scrollToSection(link.id)}
-                  className={`text-left text-gray-300 hover:text-purple-400 transition-colors py-2 ${
-                    activeSection === link.id ? "text-purple-400" : ""
-                  }`}
-                >
-                  {link.label}
-                </button>
-              ))}
+          <div className="md:hidden bg-black border-t border-purple-800/30">
+            {navLinks.map((link) => (
               <button
-                onClick={() => scrollToSection("contact")}
-                className="flex items-center gap-2 bg-gradient-primary text-white px-6 py-3 rounded-full text-sm font-medium hover:opacity-90 transition-all duration-300 mt-2"
+                key={link.id}
+                onClick={() => scrollToSection(link.id)}
+                className={`block w-full text-left px-4 py-3 text-gray-300 hover:bg-purple-500/10 hover:text-purple-400 transition-colors ${
+                  activeSection === link.id ? "text-purple-400" : ""
+                }`}
               >
-                <span>Contact Me</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                {link.label}
               </button>
-            </div>
+            ))}
           </div>
         )}
       </nav>
@@ -319,7 +216,6 @@ const Portfolio = () => {
         handleSubmit={handleSubmit} 
       />
 
-      {/* Footer */}
       {/* Footer */}
       <footer className="py-12 px-4">
         <div className="max-w-6xl mx-auto">
@@ -373,7 +269,7 @@ const Portfolio = () => {
                     rel="noopener noreferrer"
                   >
                     <svg className="w-5 h-5 text-gray-300 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.40z"/>
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                     </svg>
                   </a>
                 </div>
@@ -383,61 +279,19 @@ const Portfolio = () => {
               <div>
                 <h3 className="text-lg font-bold text-purple-300 mb-4">Quick Links</h3>
                 <ul className="space-y-3">
-                  <li>
-                    <button
-                      onClick={() => scrollToSection("home")}
-                      className="text-gray-300 hover:text-purple-400 transition-colors duration-300 flex items-center group"
-                    >
-                      <svg className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                      Home
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => scrollToSection("about")}
-                      className="text-gray-300 hover:text-purple-400 transition-colors duration-300 flex items-center group"
-                    >
-                      <svg className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                      About
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => scrollToSection("projects")}
-                      className="text-gray-300 hover:text-purple-400 transition-colors duration-300 flex items-center group"
-                    >
-                      <svg className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                      Projects
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => scrollToSection("blog")}
-                      className="text-gray-300 hover:text-purple-400 transition-colors duration-300 flex items-center group"
-                    >
-                      <svg className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                      Blog
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => scrollToSection("contact")}
-                      className="text-gray-300 hover:text-purple-400 transition-colors duration-300 flex items-center group"
-                    >
-                      <svg className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                      Contact
-                    </button>
-                  </li>
+                  {navLinks.slice(0, 5).map((link) => (
+                    <li key={link.id}>
+                      <button
+                        onClick={() => scrollToSection(link.id)}
+                        className="text-gray-300 hover:text-purple-400 transition-colors duration-300 flex items-center group"
+                      >
+                        <svg className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                        {link.label}
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               </div>
               

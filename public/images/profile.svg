@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Circular metallic purple placeholder avatar
+  - Gradient background
+  - Subtle ring/border
+  - Simple white silhouette (head + shoulders)
+  - Transparent corners, makes a good circular avatar in UI
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Placeholder profile image">
+  <defs>
+    <linearGradient id="grad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#a78bfa" />
+      <stop offset="50%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+    <radialGradient id="sheen" cx="0.25" cy="0.25" r="0.9">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18" />
+      <stop offset="60%" stop-color="#ffffff" stop-opacity="0.02" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- transparent background so it blends with any page background -->
+  <rect width="100%" height="100%" fill="transparent" />
+
+  <!-- group with transformation to make math easier -->
+  <g transform="translate(256,256)">
+    <!-- outer glow ring -->
+    <circle r="148" fill="none" stroke="rgba(167,139,250,0.12)" stroke-width="10" />
+
+    <!-- main gradient circle -->
+    <circle r="140" fill="url(#grad)" filter="url(#shadow)" />
+    <!-- sheen highlight -->
+    <circle r="140" fill="url(#sheen)" />
+    
+    <!-- inner ring to give metallic effect -->
+    <circle r="110" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3" />
+
+    <!-- silhouette: head -->
+    <ellipse cx="0" cy="-40" rx="36" ry="44" fill="#ffffff" opacity="0.95" />
+    <!-- silhouette: torso -->
+    <path d="M -66 44 C -66 18 -36 -4 -6 -4 H 6 C 36 -4 66 18 66 44 C 66 74 36 94 -6 94 H -6 C -36 94 -66 74 -66 44 Z" fill="#ffffff" opacity="0.95" />
+
+    <!-- subtle inner shadow: bottom -->
+    <ellipse cx="0" cy="124" rx="80" ry="12" fill="#000" opacity="0.06" />
+  </g>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="#0b0f14"/>
+  <g transform="translate(256,256)">
+    <circle cx="0" cy="-30" r="90" fill="url(#g)"/>
+    <circle cx="0" cy="-30" r="88" fill-opacity="0.05"/>
+    <rect x="-130" y="90" rx="18" ry="18" width="260" height="140" fill="#0a192f" stroke="#a78bfa" stroke-width="6"/>
+    <text x="0" y="230" text-anchor="middle" font-family="sans-serif" font-size="30" fill="#a78bfa">Foto Anda</text>
+  </g>
+</svg>

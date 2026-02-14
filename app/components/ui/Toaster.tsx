@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import { Toast } from "@/components/ui/Toast";
 
-export function Toaster({ toast }: { toast: { message: string; type?: 'success' | 'error' | 'info' } }) {
+export function Toaster({
+  toast,
+}: {
+  toast: { message: string; type?: "success" | "error" | "info" };
+}) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {

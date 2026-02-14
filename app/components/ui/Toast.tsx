@@ -1,6 +1,12 @@
 import { cn } from "@/lib/utils";
 
-export function Toast({ message, type = "success" }: { message: string; type?: 'success' | 'error' | 'info' }) {
+export function Toast({
+  message,
+  type = "success",
+}: {
+  message: string;
+  type?: "success" | "error" | "info";
+}) {
   return (
     <div
       className={cn(
