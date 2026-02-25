@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { Mail, MapPin, Github, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Mail, MapPin, Github, Linkedin, Instagram } from "lucide-react";
 import FadeUp from "@/components/ui/FadeUp";
 import { personalInfo } from "../../frontend/src/mock/mockData";
 
@@ -46,12 +46,6 @@ const About: React.FC<AboutProps> = ({ loveHearts, createLoveHearts }) => {
                   className="text-gray-400 hover:text-purple-400 transition-colors"
                 >
                   <Linkedin size={24} />
-                </a>
-                <a
-                  href={personalInfo.social.twitter}
-                  className="text-gray-400 hover:text-purple-400 transition-colors"
-                >
-                  <Twitter size={24} />
                 </a>
                 <a
                   href={personalInfo.social.instagram}

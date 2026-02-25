@@ -1,17 +1,31 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Menu, X } from "lucide-react";
 import emailjs from '@emailjs/browser';
 
-// Import komponen admin yang sudah dipisah
+// Import komponen critical (above the fold)
 import Home from "../components/admin/Home";
-import About from "../components/admin/About";
-import Skill from "../components/admin/Skill";
-import Projects from "../components/admin/Projects";
-import Experience from "../components/admin/Experience";
-import Blog from "../components/admin/Blog";
-import Contact from "../components/admin/Contact";
 import LoadingScreen from "../components/LoadingScreen";
+// Import Skill component normally karena butuh props untuk animasi
+import Skill from "../components/admin/Skill";
+
+// Lazy load komponen yang tidak critical dengan loading placeholder
+const About = dynamic(() => import("../components/admin/About"), {
+  loading: () => <div className="h-96 bg-gray-900/50 animate-pulse rounded-lg mx-4"></div>
+});
+const Projects = dynamic(() => import("../components/admin/Projects"), {
+  loading: () => <div className="h-96 bg-gray-900/50 animate-pulse rounded-lg mx-4"></div>
+});
+const Experience = dynamic(() => import("../components/admin/Experience"), {
+  loading: () => <div className="h-96 bg-gray-900/50 animate-pulse rounded-lg mx-4"></div>
+});
+const Blog = dynamic(() => import("../components/admin/Blog"), {
+  loading: () => <div className="h-96 bg-gray-900/50 animate-pulse rounded-lg mx-4"></div>
+});
+const Contact = dynamic(() => import("../components/admin/Contact"), {
+  loading: () => <div className="h-96 bg-gray-900/50 animate-pulse rounded-lg mx-4"></div>
+});
 
 import { toast } from "@/hooks/use-toast";
 import { personalInfo, skills } from "../frontend/src/mock/mockData";
@@ -69,13 +83,14 @@ const Portfolio = () => {
   // Skills animation effect
   useEffect(() => {
     if (skillsInView && !isLoading) {
-      console.log('Starting skills animation');
+      console.log('Starting skills animation with skills:', skills);
       
       // Reset animated skills first
       setAnimatedSkills({});
       setSkillsCompleted({});
       
       skills.forEach((skill, index) => {
+        console.log(`Animating skill ${index}: ${skill.name} to ${skill.level}%`);
         const animationDelay = index * 150; // Stagger animation
         setTimeout(() => {
           const duration = 2500; // 2.5 seconds for smoother animation
@@ -89,6 +104,7 @@ const Portfolio = () => {
             if (currentValue >= skill.level) {
               currentValue = skill.level;
               clearInterval(timer);
+              console.log(`Skill ${skill.name} animation completed at ${skill.level}%`);
               // Mark skill as completed untuk wave animation
               setTimeout(() => {
                 setSkillsCompleted(prev => ({
@@ -177,12 +193,12 @@ const Portfolio = () => {
     }
     
     try {
-      // Initialize EmailJS dengan public key
-      emailjs.init('KWBZ3QluYH1xgqnFN');
+      // Initialize EmailJS dengan public key BARU
+      emailjs.init('SvLVYs1_AJFr2QpFr'); // Public Key baru
       
       const result = await emailjs.send(
-        'service_441887q',     // Service ID
-        'template_8oa6jwt',    // Template ID yang benar
+        'service_0qvydjk',     // Service ID baru
+        'template_vixxrj9',    // Template ID baru
         {
           from_name: formData.name,
           from_email: formData.email,
@@ -359,16 +375,6 @@ const Portfolio = () => {
                   >
                     <svg className="w-5 h-5 text-gray-300 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                  </a>
-                  <a
-                    href={personalInfo.social.twitter}
-                    className="w-10 h-10 bg-gray-800 hover:bg-gradient-primary rounded-full flex items-center justify-center transition-all duration-300 hover:transform hover:scale-110 group"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <svg className="w-5 h-5 text-gray-300 group-hover:text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
                     </svg>
                   </a>
                   <a

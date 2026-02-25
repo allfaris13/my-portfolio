@@ -20,7 +20,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoadingComplete }) => {
   ];
 
   useEffect(() => {
-    const duration = 3000; // 3 seconds total
+    const duration = 2000; // Reduced to 2 seconds for better UX
     const interval = 50; // Update every 50ms
     const steps = duration / interval;
     const progressStep = 100 / steps;

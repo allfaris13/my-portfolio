@@ -1,0 +1,20 @@
+{
+  "name": "Dev Area - Alfian Jack Portfolio",
+  "short_name": "Dev Area",
+  "description": "Frontend Developer Portfolio - Membangun pengalaman web yang indah dan interaktif",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#9333ea",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "developer", "frontend"],
+  "lang": "id",
+  "orientation": "portrait-primary"
+}

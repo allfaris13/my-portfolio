@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import FadeUp from "@/components/ui/FadeUp";
@@ -11,6 +11,51 @@ interface SkillProps {
 }
 
 const Skill: React.FC<SkillProps> = ({ animatedSkills, skillsCompleted }) => {
+  const [localAnimatedSkills, setLocalAnimatedSkills] = useState<{[key: number]: number}>({});
+  const [localSkillsCompleted, setLocalSkillsCompleted] = useState<{[key: number]: boolean}>({});
+
+  // Fallback animation jika props tidak bekerja
+  useEffect(() => {
+    // Jika tidak ada animatedSkills dari props, buat animasi lokal
+    if (Object.keys(animatedSkills).length === 0) {
+      console.log('No animated skills from props, starting local animation');
+      
+      skills.forEach((skill, index) => {
+        const animationDelay = index * 150;
+        setTimeout(() => {
+          const duration = 2500;
+          const steps = 80;
+          const increment = skill.level / steps;
+          let currentValue = 0;
+          
+          const timer = setInterval(() => {
+            currentValue += increment;
+            
+            if (currentValue >= skill.level) {
+              currentValue = skill.level;
+              clearInterval(timer);
+              setTimeout(() => {
+                setLocalSkillsCompleted(prev => ({
+                  ...prev,
+                  [index]: true
+                }));
+              }, 500);
+            }
+            
+            setLocalAnimatedSkills(prev => ({
+              ...prev,
+              [index]: Math.round(currentValue)
+            }));
+          }, duration / steps);
+        }, animationDelay);
+      });
+    }
+  }, [animatedSkills]);
+
+  // Use props if available, otherwise use local state
+  const currentAnimatedSkills = Object.keys(animatedSkills).length > 0 ? animatedSkills : localAnimatedSkills;
+  const currentSkillsCompleted = Object.keys(skillsCompleted).length > 0 ? skillsCompleted : localSkillsCompleted;
+
   return (
     <section id="skills" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
@@ -46,9 +91,9 @@ const Skill: React.FC<SkillProps> = ({ animatedSkills, skillsCompleted }) => {
                             <div
                               className="bg-gradient-primary h-2 rounded-full transition-all duration-1000 ease-out progress-animate"
                               style={{ 
-                                width: `${animatedSkills[index] || 0}%`,
+                                width: `${currentAnimatedSkills[index] || 0}%`,
                                 transformOrigin: 'left',
-                                boxShadow: animatedSkills[index] > 0 
+                                boxShadow: currentAnimatedSkills[index] > 0 
                                   ? `0 0 8px rgba(147, 51, 234, 0.5)` 
                                   : 'none'
                               }}
@@ -57,7 +102,7 @@ const Skill: React.FC<SkillProps> = ({ animatedSkills, skillsCompleted }) => {
                         </div>
                         <div className="w-10 text-right">
                           <span className="text-xs text-purple-400 font-medium tabular-nums">
-                            {animatedSkills[index] || 0}%
+                            {currentAnimatedSkills[index] || 0}%
                           </span>
                         </div>
                       </div>
@@ -65,11 +110,11 @@ const Skill: React.FC<SkillProps> = ({ animatedSkills, skillsCompleted }) => {
                       {/* Volume/Level Indicator */}
                       <div className="flex items-center gap-1">
                         <span className="text-xs text-gray-500 mr-1">Level:</span>
-                        <div className={`flex gap-1 ${skillsCompleted[index] ? 'skill-completed' : ''}`}>
+                        <div className={`flex gap-1 ${currentSkillsCompleted[index] ? 'skill-completed' : ''}`}>
                           {[...Array(5)].map((_, i) => {
-                            const currentSkillValue = animatedSkills[index] || 0;
+                            const currentSkillValue = currentAnimatedSkills[index] || 0;
                             const isActive = i < Math.ceil(currentSkillValue / 20);
-                            const isCompleted = skillsCompleted[index];
+                            const isCompleted = currentSkillsCompleted[index];
                             
                             // Wave class berdasarkan posisi bar
                             const waveClass = isCompleted && isActive 
@@ -105,17 +150,17 @@ const Skill: React.FC<SkillProps> = ({ animatedSkills, skillsCompleted }) => {
                         <div className="ml-1 text-xs text-purple-300 font-medium flex items-center gap-1">
                           {/* Emoji berdasarkan skill level */}
                           <span className={`text-sm transition-all duration-500 ${
-                            skillsCompleted[index] ? 'animate-pulse skill-emoji-purple' : 'skill-emoji-purple'
+                            currentSkillsCompleted[index] ? 'animate-pulse skill-emoji-purple' : 'skill-emoji-purple'
                           }`}>
-                            {(animatedSkills[index] || 0) >= 90 && '🔥'}
-                            {(animatedSkills[index] || 0) >= 80 && (animatedSkills[index] || 0) < 90 && '⭐'}
-                            {(animatedSkills[index] || 0) >= 70 && (animatedSkills[index] || 0) < 80 && '💪'}
-                            {(animatedSkills[index] || 0) >= 50 && (animatedSkills[index] || 0) < 70 && '📈'}
-                            {(animatedSkills[index] || 0) < 50 && '🌱'}
+                            {(currentAnimatedSkills[index] || 0) >= 90 && '🔥'}
+                            {(currentAnimatedSkills[index] || 0) >= 80 && (currentAnimatedSkills[index] || 0) < 90 && '⭐'}
+                            {(currentAnimatedSkills[index] || 0) >= 70 && (currentAnimatedSkills[index] || 0) < 80 && '💪'}
+                            {(currentAnimatedSkills[index] || 0) >= 50 && (currentAnimatedSkills[index] || 0) < 70 && '📈'}
+                            {(currentAnimatedSkills[index] || 0) < 50 && '🌱'}
                           </span>
                           
                           {/* Completion indicator */}
-                          {skillsCompleted[index] && (
+                          {currentSkillsCompleted[index] && (
                             <span className="text-purple-400 animate-pulse text-xs">●</span>
                           )}
                         </div>
