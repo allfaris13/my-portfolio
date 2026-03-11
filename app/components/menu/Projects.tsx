@@ -34,7 +34,7 @@ const Projects: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, idx) => (
               <FadeUp key={project.id} delayMs={(idx % 3) * 80}>
-                <Card className="h-full flex flex-col bg-gray-900 border-gray-700 hover:border-purple-500 motion-safe:transition-all motion-safe:duration-300 hover:transform hover:-translate-y-2 hover:scale-105 overflow-hidden group glow-purple">
+                <Card className="h-full flex flex-col bg-[var(--card-bg)] border-[var(--card-border)] backdrop-blur-md hover:border-purple-500/50 motion-safe:transition-all motion-safe:duration-300 hover:transform hover:-translate-y-2 hover:scale-105 overflow-hidden group glow-purple">
                   <div className="relative h-48 overflow-hidden">
                     <Image
                       src={project.image}
@@ -46,10 +46,10 @@ const Projects: React.FC = () => {
                     <div className="absolute inset-0 bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors"></div>
                   </div>
                   <CardContent className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-bold text-gray-100 mb-2 group-hover:text-purple-400 transition-colors">
+                    <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                       {project.title}
                     </h3>
-                    <p className="text-gray-400 text-sm mb-4 line-clamp-3 flex-1">
+                    <p className="text-[var(--text-secondary)] text-sm mb-4 line-clamp-3 flex-1">
                       {project.description}
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">

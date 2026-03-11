@@ -2,9 +2,9 @@ export const personalInfo = {
   name: "Alfian Jack",
   title: "Frontend Developer",
   tagline: "Membangun pengalaman web yang indah dan interaktif",
-  bio: "Saya adalah seorang Frontend Developer yang passionate dalam menciptakan user interface yang intuitif dan menarik. Dengan pengalaman dalam React, Next.js, dan modern web technologies, saya fokus untuk menghadirkan solusi web yang responsif dan user-friendly.",
+  bio: " Saya Alfian Zaky, siswa kelas XI jurusan Rekayasa Perangkat Lunak di SMKN 6 Malang, saya memiliki ketertarikan besar dalam membangun antarmuka web yang estetis, responsif, dan fungsional.",
   email: "alpianzakialfaris@gmail.com",
-  location: "Indonesia",
+  location: "Pakis",
   // `photo` is the recommended place for your actual portrait (local file under /public/images/profile.svg)
   // Set this to a local path (e.g. "/images/profile.svg") or a remote URL (add domain to next.config.js).
   photo: "/images/gekyume.jpg",
@@ -22,14 +22,8 @@ export const skills = [
   { name: "React", category: "Frontend", level: 50 },
   { name: "Next.js", category: "Frontend", level: 50 },
   { name: "Laravel", category: "Backend", level: 50 },
-  { name: "JavaScript", category: "Language", level: 50 },
-  { name: "TypeScript", category: "Language", level: 50 },
-  { name: "HTML", category: "Frontend", level: 90 },
-  { name: "CSS", category: "Frontend", level: 90 },
-  { name: "Tailwind CSS", category: "Styling", level: 50 },
   { name: "Git", category: "Tools", level: 50 },
   { name: "Figma", category: "Design", level: 70 },
-  { name: "Responsive Design", category: "Frontend", level: 50 },
 ];
 
 export const projects = [
@@ -38,15 +32,25 @@ export const projects = [
     title: "Kos putra RahmatZAW",
     description:
       "Solusi sewa kos modern dengan fitur Full-stack: Katalog, Checkout, dan Payment Integration.",
-    image:
-      "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
+    image: "/images/kos_rahmatzaw.png",
     technologies: ["Next.js", "Tailwind CSS", "Stripe API, Go"],
     liveLink: "https://rahmadzaw.busines.biz.id/",
     githubLink: "https://github.com/allfaris13/platfrom-kos",
     featured: true,
     category: "Web App",
   },
-
+  {
+    id: 2,
+    title: "BiosKocak",
+    description:
+      "website bioskop yang menjadi solusi bersama keluarga untuk menonton film favorit",
+    image: "/images/bioskocak.png",
+    technologies: ["vite", "Tailwind CSS"],
+    liveLink: "https://bioskocak.vercel.app/",
+    githubLink: "https://github.com/allfaris13/React-Final-Project",
+    featured: true,
+    category: "Web App",
+  },
 ];
 
 export const experiences = [

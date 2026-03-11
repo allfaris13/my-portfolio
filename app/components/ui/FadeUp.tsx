@@ -14,7 +14,7 @@ export function FadeUp({
   className,
   threshold = 0.2,
   delayMs = 0,
-  once = true,
+  once = false,
   ...props
 }: FadeUpProps) {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold });
@@ -24,8 +24,8 @@ export function FadeUp({
       ref={ref as any}
       className={cn(
         // Motion-safe only: respects prefers-reduced-motion
-        "motion-safe:transition-[opacity,transform] motion-safe:duration-700 motion-safe:ease-[cubic-bezier(.16,.84,.28,1)]",
-        "opacity-0 translate-y-6",
+        "motion-safe:transition-[opacity,transform] motion-safe:duration-1000 motion-safe:ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform",
+        "opacity-0 translate-y-8",
         shouldShow && "opacity-100 translate-y-0",
         className
       )}

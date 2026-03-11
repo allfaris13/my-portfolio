@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Alfian Jack" }],
   creator: "Alfian Jack",
   publisher: "Alfian Jack",
-  
+
   // Open Graph / Facebook
   openGraph: {
     type: 'website',
@@ -41,24 +41,24 @@ export const metadata: Metadata = {
       },
     ],
   },
-  
+
   // Icons
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
   },
-  
+
   // Manifest
   manifest: '/manifest.json',
-  
+
   // Viewport
   viewport: {
     width: 'device-width',
     initialScale: 1,
     maximumScale: 1,
   },
-  
+
   // Robots
   robots: {
     index: true,
@@ -73,17 +73,23 @@ export const metadata: Metadata = {
   },
 };
 
+import { ThemeProvider } from "./components/ThemeProvider";
+import Cursor from "./components/menu/Cursor";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
-        {children}
+        <ThemeProvider>
+          <Cursor />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

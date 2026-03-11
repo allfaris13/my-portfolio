@@ -7,13 +7,14 @@ module.exports = {
     "./public/**/*.html",
     "./*.html",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         // Tema hitam pekat dan ungu - optimized palette
         dark: {
           900: "#000000",
-          800: "#0a0a0a", 
+          800: "#0a0a0a",
           700: "#1a1a1a",
         },
         primary: {
