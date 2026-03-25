@@ -93,7 +93,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
         antialias: false,
         alpha: true,
         powerPreference: effectiveQuality === 'low' ? 'low-power' : 'high-performance',
-        precision: (settings.precision as THREE.Precision),
+        precision: (settings.precision as 'highp' | 'mediump' | 'lowp'),
         stencil: false,
         depth: false
       });
